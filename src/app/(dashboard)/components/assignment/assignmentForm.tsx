@@ -2,20 +2,15 @@ import { useForm } from "react-hook-form";
 import { Modal } from "@/components/modalForm";
 import { InputField } from "@/components/form/inputField";
 import { TextareaField } from "@/components/form/textareaField";
+import {  CreateGradeRequestBody } from "@/types/grade-types";
 
-
-interface FormData {
-  grade: number;
-  assignment_id: number
-  feedback : string
-}
 
 interface AssignmentFormProps {
   readonly isOpen: boolean;
   readonly isLoading: boolean;
-  readonly onSubmit: (data: FormData) => void;
+  readonly onSubmit: (data: CreateGradeRequestBody) => void;
   readonly onClose: () => void;
-  id_assignment : number;
+  id_assignment: number;
 }
 
 export function AssignmentForm({
@@ -23,18 +18,23 @@ export function AssignmentForm({
   isLoading,
   onSubmit,
   onClose,
-  id_assignment
+  id_assignment,
 }: AssignmentFormProps) {
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
-  } = useForm<FormData>();
+  } = useForm<CreateGradeRequestBody>({
+    defaultValues: {
+      grade: 0,
+      assignment_id: -1,
+      feedback: "",
+    },
+  });
 
-  setValue('assignment_id',id_assignment)
-
-
+  setValue("assignment_id", id_assignment);
 
   return (
     <Modal
@@ -42,14 +42,22 @@ export function AssignmentForm({
       title="Submit Grade"
       isLoading={isLoading}
       onClose={onClose}
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit((data) => {
+        onSubmit(data);
+        reset();
+      })}
     >
-      <InputField
-        id="title"
-        label="Grade"
-        register={register("grade", { required: "Title is required" })}
-        error={errors.grade?.message}
-      />
+     <InputField
+  id="title"
+  label="Grade"
+  type="number"
+  register={register("grade", { 
+    required: "Grade is required", 
+    min: { value: 0, message: "Grade must be at least 0" },
+    max: { value: 100, message: "Grade cannot exceed 100" }
+  })}
+  error={errors.grade?.message}
+/>
 
 
       <TextareaField

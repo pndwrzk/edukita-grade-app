@@ -6,6 +6,7 @@ import {
   GradeResponse,
   AssignmentsResponse,
   CreateAssignmentRequestBody,
+  CreateGradeRequestBody
 } from "@/types/grade-types";
 
 import { axiosConfig } from "@/utils/axiosConfig";
@@ -90,6 +91,22 @@ export async function getAssignments(filterSubject: string): Promise<Assignments
 export async function createAssignments(bodyRequest:CreateAssignmentRequestBody): Promise<AssignmentsResponse> {
   try {
     const response = await resolver.post<AssignmentsResponse>("/assignments",bodyRequest);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return error.response.data;
+    } else {
+      return {
+        message: "unknown error",
+        data: null,
+      };
+    }
+  }
+}
+
+export async function createGrade(bodyRequest:CreateGradeRequestBody) {
+  try {
+    const response = await resolver.post<AssignmentsResponse>("/grades",bodyRequest);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {

@@ -57,7 +57,7 @@ export function Modal({
               Close
             </button>
             {onSubmit && (
-              <button type="button" className="py-2 px-4 bg-blue-500 text-white rounded-lg" onClick={onSubmit}>
+              <button type="button" className="py-2 px-4 bg-[#4F59F6] text-white rounded-lg" onClick={onSubmit}>
                 {isLoading && <Loading />} Submit
               </button>
             )}

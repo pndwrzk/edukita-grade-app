@@ -6,8 +6,8 @@ export const LIST_ROLE  :OptionList[]= [
         label :'Student'
     },
     {
-        value :'math',
-        label :'Math'
+        value :'teacher',
+        label :'Teacher'
     },
 
 ]

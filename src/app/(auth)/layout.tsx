@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="bg-gray-100 flex h-screen items-center justify-center p-4">
+        <div className="bg-[#4F59F6]  flex h-screen items-center justify-center p-4">
           <div className="w-full">{children}</div>
         </div>
       </body>

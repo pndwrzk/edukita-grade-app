@@ -8,64 +8,67 @@ import { useEffect, useState } from "react";
 export default function Navbar() {
   const [userRole, setUserRole] = useState<string | undefined>("");
   const router = useRouter();
+
   const onLogout = async () => {
     removeCookie();
     router.push("/login");
   };
 
   useEffect(() => {
-    const cookies = document.cookie
+    const roleAccess = document.cookie
       .split("; ")
-      .find((row) => row.startsWith("role_access="));
-    const roleAccess = cookies?.split("=")[1];
-    setUserRole(roleAccess ?? roleAccess);
+      .find((row) => row.startsWith("role_access="))
+      ?.split("=")[1];
+    setUserRole(roleAccess ?? "");
   }, []);
 
-  
-
   return (
-    <header className="lg:px-16 px-2 bg-white flex flex-wrap items-center py-[25px] shadow-lg  w-full">
-      <div className="flex flex-1 items-center space-x-4">
+    <header className="lg:px-16 px-4 bg-gradient-to-r from-[#4F59F6] to-[#6A75F8] flex items-center py-4 shadow-xl w-full z-50 rounded-b-2xl">
+      <div className="flex flex-1 items-center space-x-6">
         {userRole === "teacher" && (
-           <Link href="/assignments" className="text-sm font-bold text-black">
-           Assigments
-         </Link>
+          <Link
+            href="/assignments"
+            className="text-lg font-semibold text-white hover:text-gray-200 transition"
+          >
+             Assignments
+          </Link>
         )}
-         {userRole === "student" && (
-           <Link href="/grades" className="text-sm font-bold text-black">
-           Grades
-         </Link>
+        {userRole === "student" && (
+          <Link
+            href="/grades"
+            className="text-sm font-semibold text-white hover:text-gray-200 transition"
+          >
+             Grades
+          </Link>
         )}
-      
       </div>
 
-      <div className="w-[200px]">
+      <div className="relative">
         <div className="group relative cursor-pointer py-2">
-          <div className="flex items-center ">
-            <button className="menu-hover my-2 text-base font-medium text-black lg:mx-4">
-              Welcome  {userRole}
-            </button>
-            <span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="h-6 w-6 text-black"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                />
-              </svg>
-            </span>
-          </div>
+          <button
+            className="flex items-center text-base font-medium text-white hover:shadow-md px-4 py-2 rounded-lg transition"
+            aria-label="User menu"
+          >
+            Welcome, {userRole}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="h-5 w-5 ml-2"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+              />
+            </svg>
+          </button>
 
-          <div className="invisible absolute z-50 flex w-full flex-col bg-gray-100 py-1 px-4 text-gray-800 shadow-xl group-hover:visible">
+          <div className="absolute right-0 mt-2 w-44 rounded-xl bg-white py-2 shadow-lg opacity-0 group-hover:opacity-100 transition-all">
             <button
-              className="my-2 block border-b border-gray-100 py-1 font-semibold text-gray-500 hover:text-black md:mx-2"
+              className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
               onClick={onLogout}
             >
               Logout

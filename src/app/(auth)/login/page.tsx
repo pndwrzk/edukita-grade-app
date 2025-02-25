@@ -10,6 +10,7 @@ import {Loading} from "@/components/loading";
 import Link from "next/link";
 import { InputField } from "@/components/form/inputField";
 import {FormAlert} from "@/components/formAlert";
+import { showAlert } from "@/components/alert";
 
 export default function Login() {
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -30,6 +31,7 @@ export default function Login() {
       const result = await login(formValues);
 
       if (result?.data) {
+         showAlert(result.message,result.data != null)
         StoreCookie(result.data);
         result?.data.role_access === "student" ? router.push("/grades") : router.push("/assignments");
         reset();
@@ -46,7 +48,7 @@ export default function Login() {
   const handleCloseError = () => setErrorMessage("");
 
   return (
-    <div className="bg-gray-100 flex h-screen items-center justify-center p-4">
+    <div className="from-[#4F59F6] to-[#6A75F8]  flex h-screen items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="bg-white shadow-md rounded-md p-8">
           <HeaderSection />
@@ -107,7 +109,7 @@ function LoginForm({
 
       <button
         type="submit"
-        className="flex w-full justify-center rounded-md bg-[#0060AC] py-2 px-4 text-sm font-medium text-white hover:bg-opacity-75 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2"
+        className="flex w-full justify-center rounded-md bg-[#31EEC4]  py-2 px-4 text-sm font-medium text-black hover:bg-opacity-75 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2"
         disabled={isLoading}
       >
         {isLoading ? <Loading /> : "Login"}

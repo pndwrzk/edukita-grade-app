@@ -73,7 +73,14 @@ export type RegisterRequestBody = {
 export type CreateAssignmentRequestBody = {
   title: string;
   content: string;
-  subject: 'math' | 'english' ;
+  subject: 'math' | 'english' | '';
+}
+
+
+export type CreateGradeRequestBody = {
+  grade: number;
+  feedback: string;
+  assignment_id: number;
 }
 
 export type DataToken = {

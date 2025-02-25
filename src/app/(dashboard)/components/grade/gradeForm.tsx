@@ -1,20 +1,21 @@
+"use client"
+
 import { useForm } from "react-hook-form";
 import { Modal } from "@/components/modalForm";
 import { LIST_SUBJECT } from "@/app/constanst/subject";
 import { InputField } from "@/components/form/inputField";
 import { TextareaField } from "@/components/form/textareaField";
 import { SelectField } from "@/components/form/selectField";
+import { useEffect } from "react";
+import { CreateAssignmentRequestBody } from "@/types/grade-types";
 
-interface FormData {
-  title: string;
-  subject: "math" | "english";
-  content: string;
-}
+
+
 
 interface AssignmentFormProps {
   readonly isOpen: boolean;
   readonly isLoading: boolean;
-  readonly onSubmit: (data: FormData) => void;
+  readonly onSubmit: (data: CreateAssignmentRequestBody) => void;
   readonly onClose: () => void;
 }
 
@@ -28,10 +29,24 @@ export function GradeForm({
     register,
     handleSubmit,
     watch,
+    setValue,
+    reset,
     formState: { errors },
-  } = useForm<FormData>();
+  } = useForm<CreateAssignmentRequestBody>({
+    defaultValues:{
+      title :'',
+      subject: '',
+      content: '',
+    }
+  });
 
   const selectedSubject = watch("subject");
+
+
+
+  useEffect(() => {
+    setValue("content", ""); 
+  }, [selectedSubject,setValue]);
 
   return (
     <Modal
@@ -39,7 +54,10 @@ export function GradeForm({
       title="New Assignment"
       isLoading={isLoading}
       onClose={onClose}
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit((data) => {
+        onSubmit(data);
+        reset();
+      })}
     >
       <InputField
         id="title"
@@ -59,18 +77,17 @@ export function GradeForm({
       <TextareaField
         id="content"
         label="Content"
-
+         height="h-64"
         register={register("content", {
           required: "Content is required",
-          ...(selectedSubject === "math" && {
-            pattern: {
-              value: /^\d+$/,
-              message: "Only numbers are allowed for Math",
-            },
-          }),
+          validate: (value) => 
+            selectedSubject === "math"
+             ? /^[^a-zA-Z]*$/.test(value) || "Letters are not allowed for Math"
+              : true,
         })}
         error={errors.content?.message}
       />
     </Modal>
   );
 }
+

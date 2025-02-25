@@ -1,14 +1,18 @@
-import { Assignments } from "@/types/grade-types";
+import { Assignments, CreateGradeRequestBody } from "@/types/grade-types";
 import moment from "moment";
 import { AssignmentForm } from "@/app/(dashboard)/components/assignment/assignmentForm";
 import { useState } from "react";
+import { createGrade } from "@/services/grade-service";
+import { showAlert } from "@/components/alert";
 
 interface AssignmentTableProps {
   assignments: Assignments[];
+  fetchAssignments: () => void;
 }
 
 export function AssignmentTable({
   assignments,
+  fetchAssignments,
 }: Readonly<AssignmentTableProps>) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -19,19 +23,20 @@ export function AssignmentTable({
     setIsModalOpen(true);
   };
 
-  const handleCreate = async (data: {
-    grade: number;
-    assignment_id: number;
-    feedback: string;
-  }) => {
+  const handleCreate = async (data: CreateGradeRequestBody) => {
     setIsLoading(true);
+    const result = await createGrade(data);
+    showAlert(result.message, result.data !=null);
+    fetchAssignments();
+    setIsModalOpen(false);
+    setIsLoading(false);
   };
 
   return (
     <>
-      <div className="overflow-x-auto rounded-sm shadow">
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 border-black">
-          <thead className="text-xs uppercase bg-white border-y text-gray-700 dark:text-gray-400">
+      <div className="overflow-x-auto rounded-lg shadow-md">
+        <table className="w-full text-sm text-left text-gray-700 border border-gray-200">
+          <thead className="bg-[#31EEC4] sticky top-0 z-10">
             <tr>
               {[
                 "Student",
@@ -39,9 +44,14 @@ export function AssignmentTable({
                 "Subject",
                 "Content",
                 "Created At",
-                "Grade",
+                "Feedback",
+                "Grade"
               ].map((header) => (
-                <th key={header} scope="col" className="px-6 py-3">
+                <th
+                  key={header}
+                  scope="col"
+                  className="px-6 py-3 font-semibold"
+                >
                   {header}
                 </th>
               ))}
@@ -49,10 +59,21 @@ export function AssignmentTable({
           </thead>
           <tbody>
             {assignments.map(
-              ({ id, student, title, subject, content, created_at, grade }) => (
-                <tr key={id} className="bg-white">
-                  <td className="px-6 py-4">
-                    {student?.name} ({student?.email})
+              (
+                { id, student, title, subject, content, created_at, grade },
+                index
+              ) => (
+                <tr
+                  key={id}
+                  className={`${
+                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                  } hover:bg-gray-100 transition-all`}
+                >
+                  <td className="px-6 py-4 font-medium">
+                    {student?.name} <br />
+                    <span className="text-xs text-gray-500">
+                      {student?.email}
+                    </span>
                   </td>
                   <td className="px-6 py-4">{title}</td>
                   <td className="px-6 py-4">{subject}</td>
@@ -60,11 +81,12 @@ export function AssignmentTable({
                   <td className="px-6 py-4">
                     {moment(created_at).format("DD MMM YYYY, HH:mm")}
                   </td>
+                  <td className="px-6 py-4">{grade?.feedback ?? '-'}</td>
                   <td className="px-6 py-4">
                     {grade?.grade ?? (
                       <button
                         onClick={() => handleOpenModal(id)}
-                        className="text-blue-500 hover:underline"
+                        className="px-3 py-1 text-sm font-medium text-white bg-[#4F59F6] rounded hover:bg-blue-600 transition"
                       >
                         Submit Grade
                       </button>

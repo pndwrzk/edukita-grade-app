@@ -11,6 +11,7 @@ import { InputField } from "@/components/form/inputField";
 import { LIST_ROLE } from "@/app/constanst/role";
 import { SelectField } from "@/components/form/selectField";
 import {FormAlert} from "@/components/formAlert";
+import {showAlert} from "@/components/alert";
 
 export default function Register() {
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -30,6 +31,7 @@ export default function Register() {
       if (!result.data) {
         setErrorMessage(result.message);
       } else {
+        showAlert(result.message,result.data!= null)
         router.push("/login");
       }
     } catch (error) {
@@ -40,10 +42,10 @@ export default function Register() {
   };
 
   return (
-    <div className="bg-gray-100 flex h-screen items-center justify-center p-4">
+    <div className="from-[#4F59F6] to-[#6A75F8] flex h-screen items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="bg-white shadow-md rounded-md p-8">
-          <h1 className="text-center text-md font-bold text-gray-900">TR-APP</h1>
+          <h1 className="text-center text-md font-bold text-gray-900">GRADE-APP</h1>
           <h2 className="mt-2 text-center text-3xl font-bold text-gray-900">
             Sign up to your account
           </h2>
@@ -87,7 +89,7 @@ export default function Register() {
 
             <button
               type="submit"
-              className="flex w-full justify-center rounded-md bg-[#0060AC] py-2 px-4 text-white shadow-sm hover:bg-opacity-75 focus:outline-none focus:ring-2 focus:ring-sky-400"
+              className="flex w-full justify-center rounded-md bg-[#31EEC4] py-2 px-4 text-black shadow-sm hover:bg-opacity-75 focus:outline-none focus:ring-2 focus:ring-sky-400"
               disabled={isLoading}
             >
               {isLoading ? <Loading /> : "Register"}
