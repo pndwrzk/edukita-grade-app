@@ -1,6 +1,6 @@
 
-import {Subject} from '@/types/global-types'
-export const LIST_SUBJECT  :Subject[]= [
+import {OptionList} from '@/types/global-types'
+export const LIST_SUBJECT  :OptionList[]= [
     {
         value :'math',
         label :'Math'

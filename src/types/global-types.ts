@@ -7,7 +7,7 @@ export type AlertInfo = {
   isSuccess: boolean;
 };
 
-export type Subject ={
+export type OptionList ={
   value : string;
   label : string
 }

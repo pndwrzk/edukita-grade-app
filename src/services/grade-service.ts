@@ -60,6 +60,7 @@ export async function getGrades(): Promise<GradeResponse> {
     const response = await resolver.get<GradeResponse>("/grades");
     return response.data;
   } catch (error) {
+    console.log(error);
     if (axios.isAxiosError(error) && error.response) {
       return error.response.data;
     } else {
